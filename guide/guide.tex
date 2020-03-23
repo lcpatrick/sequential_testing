@@ -213,6 +213,13 @@ The critical Z value is determined via the following simulation procedure.
 
 By construction, the above procedure yields a critical value $Z_c$ that guarantees that the probability of the z-statistic from any of the z-tests exceeding the critical value $Z_c$ is exactly $\alpha$.
 
+\subsection{Remarks}
+There are a number of considerations when using this sequential testing procedure.
+
+\begin{itemize}
+\item It is assumed that the timing of the tests correlates with how much additional data has been collected. For instance, on day $j$ there are $jN$ observations, and on day $k$ there are $kN$ observations. This assumption is made to simplify exposition, and can be adjusted/accounted for in applications, such as A/B testing, where the number of new observations does not necessarily follow such a linear trend (due to variation in traffic, weekly/monthly trends, etc.)
+\end{itemize}
+
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
 %% \appendix
