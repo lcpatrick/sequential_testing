@@ -49,6 +49,7 @@
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{bm}
 %% The amsthm package provides extended theorem environments
 %% \usepackage{amsthm}
 
@@ -142,7 +143,7 @@
 \section{Introduction}
 
 
-\section{Group Sequential Testing}
+\section{Standard Group Sequential Testing}
 \subsection{Setting}
 Data arrives over the course of $K$ periods, each period containing $N$ observations. At the end of each period $k$, $k =1,..., K$, a z-test is performed on the data which has accumulated thus far (so using $kN$ observations) to determine if the mean is statistically different from zero. The z-statistic is compared to some critical value, and the null is rejected if the critical value is exceeded. The tests are performed sequentially until the null is rejected, or until all $K$ tests have been performed.
 
@@ -218,6 +219,28 @@ There are a number of considerations when using this sequential testing procedur
 
 \begin{itemize}
 \item It is assumed that the timing of the tests correlates with how much additional data has been collected. For instance, on day $j$ there are $jN$ observations, and on day $k$ there are $kN$ observations. This assumption is made to simplify exposition, and can be adjusted/accounted for in applications, such as A/B testing, where the number of new observations does not necessarily follow such a linear trend (due to variation in traffic, weekly/monthly trends, etc.)
+\end{itemize}
+
+\section{Flexible Alpha-Spending Function Group Sequential Testing}
+The previous section outlines a relatively simple procedure to adjust the critical Z-value to account for repeated tests. The simplicity there derives from the imposition of the same critical Z-value. While such applications are simple to maintain and explain, they can be restrictive. To see this, let's plot the Type I error as a function of the number of tests.
+
+[[INSERT chart here]]
+
+This chart above is a type of \emph{alpha-spending function} - it indicates how much Type I error is being committed each time a test is performed. It starts at zero, and ends at 0.05, the desired Type I error. The shape of this function is determined by the fact that we constrain the critical Z-value to be the same for each test. However, such a constraint doesn't need to apply. In other words, we can allow the critical Z-values to vary over time/tests, as long as we constrain the total Type I error to be the right amount. 
+
+The \emph{flexible} alpha-spending function group sequential testing procedure allows for this flexibility by relying on a pre-specified alpha-spending function, and computes the appropriate critical Z-value based off of such a function. One can imagine applications where the experimenter is relatively confident of being able to detect a result early on, and thus would like to "front-load" the amount of Type I error that they want to spend on the early tests. Conversely, they might be skeptical of detecting an effect early on, and would like to "save" the Type I error for later rounds of testing. The flexible approach is able to accommodate all these risk preferences, while still respecting the overall Type I error constraint.
+\subsection{Setting}
+In the flexible alpha-spending function group sequential testing approach, we take the alpha spending function as given. An alpha-spending function is a monotonically increasing function $\bm \alpha$ from the interval $[0,1]$ to the interval $[0,\alpha]$ where $\alpha$ is the desired overall Type I error.  The domain of the function, the interval $[0,1]$ is thought of as the fraction of information that's available at the time of testing. For instance, if the experiment runs for 4 weeks, then the information fraction at the end of the second week would be 0.5. In our application, since we perform z-tests at regular intervals, the information fractions at the time of testing are of the form $(\frac 1 K, \frac 2 K, \frac 3 K, ..., \frac j K,..., \frac k K, ..., \frac K K)$.
+
+
+For examples of alpha-spending functions, refer to DeMets and Lan\footnote{David L. Demets and K.K. Gorden Lan - Interim Analysis: The Alpha Spending Function Approach, Statistics in Medicine, Vol. 13, 1994.} (1994).
+
+Given an alpha-spending function, the critical Z-values for each test are computed using the following simulation procedure.
+\begin{itemize}
+\item Draw a sample of size $M$ of multivariate normal variables with mean zero and covariance matrix $\Sigma$, to obtain a matrix Z of z-statistics, with shape $M\times K$. This is essentially simulating the distribution of the z-statistics for each of the K sequential z-tests
+\item Using the simulated z-statistics for the first test, grid-search for critical value $Z_1$ such that $P(|z^1|\geq Z_1) = \bm \alpha(\frac 1 K)$.
+\item Using the simulated z-statistics for the first 2 tests, and $Z_1$ above, grid-search for critical value $Z_2$ such that $P(|z^1|\geq Z_1, \mbox{ or } |z^2\geq Z_2) = \bm \alpha(\frac 2 K)$
+\item Iteratively, using the simulated z-statistics for the first $k$ tests, and the critical values found for the first $k-1$ tests, grid-search for the critical value $Z_k$ such that $P(|z^1|\geq Z_1, \mbox{ or... } |z^{k-1}\geq Z_{k-1}, \mbox{ or } |z^k| \geq Z_k) = \bm \alpha(\frac k K )$.
 \end{itemize}
 
 %% The Appendices part is started with the command \appendix;

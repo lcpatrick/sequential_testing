@@ -1,0 +1,266 @@
+%%
+%% Copyright 2007, 2008, 2009 Elsevier Ltd
+%%
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%%
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%%
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%%
+
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%% SP 2008/03/01
+%%
+%%
+%%
+%% $Id: elsarticle-template-num.tex 4 2009-10-24 08:22:58Z rishi $
+%%
+%%
+\documentclass[final,3p,times]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% if you use PostScript figures in your article
+%% use the graphics package for simple commands
+%% \usepackage{graphics}
+%% or use the graphicx package for more complicated commands
+%% \usepackage{graphicx}
+%% or use the epsfig package if you prefer to use the old commands
+%% \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+\usepackage{amsmath}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+%% \usepackage{lineno}
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+%% \biboptions{comma,round}
+
+% \biboptions{}
+
+
+\journal{}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for the associated footnote;
+%% use the fnref command within \author or \address for footnotes;
+%% use the fntext command for the associated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for the associated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%%
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \address{Address\fnref{label3}}
+%% \fntext[label3]{}
+
+\title{The Statistics of Multiple Hypothesis Testing}
+
+%% use optional labels to link authors explicitly to addresses:
+%% \author[label1,label2]{<author name>}
+%% \address[label1]{<address>}
+%% \address[label2]{<address>}
+
+\author{Patrick Le}
+
+\address{}
+
+\begin{abstract}
+%% Text of abstract
+
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+
+\end{frontmatter}
+
+%%
+%% Start line numbering here if you want
+%%
+% \linenumbers
+
+%% main text
+
+\section{Introduction}
+
+
+\section{Standard Group Sequential Testing}
+\subsection{Setting}
+Data arrives over the course of $K$ periods, each period containing $N$ observations. At the end of each period $k$, $k =1,..., K$, a z-test is performed on the data which has accumulated thus far (so using $kN$ observations) to determine if the mean is statistically different from zero. The z-statistic is compared to some critical value, and the null is rejected if the critical value is exceeded. The tests are performed sequentially until the null is rejected, or until all $K$ tests have been performed.
+
+If the critical value is the usual 1.96, then the fact that multiple tests are performed on the same data implies that Type I error will be inflated to be more than the desired 5\%. The goal of sequential testing techniques is to control for Type I error. While Bonferonni corrections can be used, they are overly conservative (leading to Type I errors which are too small) and reduce the power of the test.
+
+The one way to control for Type I error in sequential testing is to control the critical value in each test. Depending on the application, one might want the critical value to be the same for each test, or vary depending on the timing of the test. In this specific note, we show how to compute the shared critical value that can be used for each test.
+
+This setting can be generalized to include applications like A/B testing.
+
+\subsection{The correlation structure of z-statistics}
+The fundamental insight of sequential testing over Bonferonni corrections is that there is significant correlation between the test at some period $j$ and the test at some later period $k$. This is because both tests utilize some shared data. I now derive the correlation between the z-statistic at a period $j$, called $z^j$ with the z-statistic at some other, later, period $k$, called $z^k$.
+
+Suppose that the null is that the data, denoted by $X=(x_i)_{i=1,...,KN}$, has a mean of zero, and variance $\sigma^2$. Then using the first $kN$ observations, the sample mean is $\bar x^k = \frac{\sum_{i=1}^{kN}x_i}{kN},$ which has standard deviation $\frac{\sigma}{\sqrt{kN}}$. The resulting z-statistic is given by 
+\begin{align}
+ z^k &= \frac{\bar x^k}{\frac{\sigma}{\sqrt{kN}}}=\frac{\sum_{i=1}^{kN}x_i}{kN\frac{\sigma}{\sqrt{kN}}}.
+\end{align}
+
+Similarly, the z-statistic for the test done at period $j$ is given by 
+\begin{align}
+ z^j &= \frac{\bar x^j}{\frac{\sigma}{\sqrt{jN}}}=\frac{\sum_{i=1}^{jN}x_i}{jN\frac{\sigma}{\sqrt{jN}}}.
+\end{align}
+
+It is a standard result that the z-statistics are, under the null hypothesis, distributed asymptotically as a standard Normal (0,1) random variable. 
+
+Using the fact that these variables have mean zero, the covariance between $z^j$ and $z^k$ is given by: 
+\begin{align}
+Cov( z^j, z^k) &= E(z^j, z^k) = E\left( \frac{\sum_{i=1}^{kN}x_i}{kN\frac{\sigma}{\sqrt{kN}}}\frac{\sum_{i=1}^{jN}x_i}{jN\frac{\sigma}{\sqrt{jN}}}\right). \label{eqn3}
+\end{align}
+
+
+Consider only the numerator for now, and rewrite the second sum as 
+\begin{align*}
+E\left(\sum_{i=1}^{jN}x_i\sum_{i=1}^{kN}x_i \right) 
+&= E\left(\sum_{i=1}^{jN}x_i \left(\sum_{i=1}^{jN}x_i + \sum_{i=jN+1}^{kN}x_i \right)\right)\\
+&= E\left(\sum_{i=1}^{jN}x_i \sum_{i=1}^{jN}x_i\right)\\
+&= E\left(\sum_{i=1}^{jN}x_i^2\right)\\
+&= jN\sigma^2,
+\end{align*}
+where the second and third line use the fact that $E(x_i x_{i'}) = 0$ for any $i\neq i'$ (because the $x_i$'s are i.i.d. mean zero), and the last line uses the fact that variance of $x$ is $\sigma^2$.
+
+Plugging the numerator into the expression in \eqref{eqn3} gives
+\begin{align*}
+Cov( z^j, z^k) &= E(z^j, z^k) = \frac{kN\sigma^2}{kN\frac{\sigma}{\sqrt{kN}}jN\frac{\sigma}{\sqrt{jN}}} = \sqrt{\frac{j}{k}}. 
+\end{align*}
+
+Therefore, $Cov( z^j, z^k) = \sqrt{\frac{j}{k}}$. 
+
+More generally, let $\Sigma$ be a $K\times K$ variance covariance matrix for the z-statistics, then entries in $\Sigma$ in the are given by
+\begin{align}
+\Sigma(j, k) =\sqrt{\frac{\min(j,k)}{\max(j,k)}},\label{eqn4}
+\end{align}
+for row $j$, column $k$.
+
+\subsection{Computation of constant critical Z value}
+
+Assume that an overall Type I error of $\alpha$ is desired, then the critical Z value, $Z_c$, needs to satisfy:
+\begin{align*}
+P(|z^1| \geq Z_c, \mbox{ or } |z^2| \geq Z_c, \mbox{ or } ... \mbox{ or }|z^K| \geq Z_c) = \alpha.
+\end{align*}
+In other words, the probability that any of the z-statistics from any of the K tests is greater or equal to $Z_c$ is $\alpha$.
+
+The critical Z value is determined via the following simulation procedure.
+\begin{itemize}
+\item Draw a sample of size $M$ of multivariate normal variables with mean zero and covariance matrix $\Sigma$, to obtain a matrix Z of z-statistics, with shape $M\times K$. This is essentially simulating the distribution of the z-statistics for each of the K sequential z-tests.
+\item For each draw, compute the maximum absolute value, to obtain a matrix $Z_{abs}$ of maximum absolute z-statistics, with shape  $M\times 1$
+\item Compute the ($1-\alpha$)-percentile from the empirical distribution of $Z_{abs}$. This will be the critical value $Z_c$.
+\end{itemize}
+
+By construction, the above procedure yields a critical value $Z_c$ that guarantees that the probability of the z-statistic from any of the z-tests exceeding the critical value $Z_c$ is exactly $\alpha$.
+
+\subsection{Remarks}
+There are a number of considerations when using this sequential testing procedure.
+
+\begin{itemize}
+\item It is assumed that the timing of the tests correlates with how much additional data has been collected. For instance, on day $j$ there are $jN$ observations, and on day $k$ there are $kN$ observations. This assumption is made to simplify exposition, and can be adjusted/accounted for in applications, such as A/B testing, where the number of new observations does not necessarily follow such a linear trend (due to variation in traffic, weekly/monthly trends, etc.)
+\end{itemize}
+
+\section{Flexible Alpha Group Sequential Testing}
+The previous section outlines a relatively simple procedure to adjust the critical Z-value to account for repeated tests. The simplicity there derives from the imposition of the same critical Z-value. While such applications are simple to maintain and explain, they can be restrictive.
+
+%% The Appendices part is started with the command \appendix;
+%% appendix sections are then done as normal sections
+%% \appendix
+
+%% \section{}
+%% \label{}
+
+%% References
+%%
+%% Following citation commands can be used in the body text:
+%% Usage of \cite is as follows:
+%%   \cite{key}         ==>>  [#]
+%%   \cite[chap. 2]{key} ==>> [#, chap. 2]
+%%
+
+%% References with bibTeX database:
+
+\bibliographystyle{elsarticle-num}
+\bibliography{<your-bib-database>}
+
+%% Authors are advised to submit their bibtex database files. They are
+%% requested to list a bibtex style file in the manuscript if they do
+%% not want to use elsarticle-num.bst.
+
+%% References without bibTeX database:
+
+% \begin{thebibliography}{00}
+
+%% \bibitem must have the following form:
+%%   \bibitem{key}...
+%%
+
+% \bibitem{}
+
+% \end{thebibliography}
+
+
+\end{document}
+
+%%
+%% End of file `elsarticle-template-num.tex'.

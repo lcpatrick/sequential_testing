@@ -11,7 +11,7 @@ class StandardGroupSequential(object):
         self,
         num_tests,
         alpha=0.05,
-        simulation_size=10000
+        simulation_size=1000000
     ):
         """
         num_tests: number of tests planned, K
